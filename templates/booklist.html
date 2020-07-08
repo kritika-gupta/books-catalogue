@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block heading %}
+    {{books|length}} books matched your search.
+{% endblock %}
+
+{%block body %}
+
+        {% if books %}
+            <div id="booklist">
+
+                <!-- show table of books -->
+                <table class="table table-bordered">
+                    <tr>
+                        <th>#</th>
+                        <th>ISBN</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Year</th>
+                    </tr>
+                    {% for book in books %}
+                    <tr>
+                        <td>{{loop.index}}</td>
+                        <td><a href="{{ url_for('book', isbn=book.isbn) }}">{{ book.isbn }}</a></td>
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.author }}</td>
+                        <td>{{ book.year }}</td>
+                        
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% else %}
+            <p>There are no books in the catalogue.</p>
+        {% endif %}
+        
+
+{% endblock %}

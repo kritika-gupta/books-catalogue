@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block heading %}
+    Welcome!
+{% endblock %}
+
+{%block body %}
+
+    <blockquote class="blockquote">
+        <p>The person, be it gentleman or lady, who has not pleasure in a good novel, must be intolerably stupid.</p>
+        <footer class="blockquote-footer">Jane Austen <cite>Northanger Abbey</cite></footer>
+    </blockquote>
+
+    <div class="card" id="api">
+        <div class="card-header">
+        Use our API!
+        </div>
+        <div class="card-body">
+            <h6 class="card-title">We provide an API to access the average rating a book receives on our website.</h6>
+            <p style="font-size: 15px;" class="card-text">
+                To access the title, author, year, average rating, number of ratings for a book, send a GET request to the following link : '/api/&ltisbn&gt' where the parameter 'isbn' is the ISBN of the book you are requesting data for. 
+                <br>
+                If the ISBN is present in our database you will get a JSON response with keys : 'isbn', 'title', 'author', 'year', 'average_score', 'review_count'.
+            </p>
+        </div>
+    </div>
+
+{% endblock %}

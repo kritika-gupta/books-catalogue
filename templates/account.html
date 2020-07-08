@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block heading %}
+    Books reviewed by you, {{username}}.
+{% endblock %}
+
+{%block body %}
+        {% if reviews %}
+            <div class="card" id="review-card">
+                <div class="card-header">Your Reviews</div>
+                    <ul class="list-group list-group-flush">
+                        {% for review in reviews %}
+                        <li class="list-group-item">
+                            <a href="{{ url_for('book', isbn=review.book_isbn) }}">{{review.title}}</a>
+                            <br>
+                            <small>
+                                Time: {{review.timestamp}}
+                                <br>
+                                Stars: {{review.stars}}
+                                <br> 
+                                Review: {{review.textreview}}
+                            </small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+            </div>
+
+        {% else %}
+            <p>No reviews yet! You can search for a book and add one. </p> 
+        {% endif %}
+{% endblock %}

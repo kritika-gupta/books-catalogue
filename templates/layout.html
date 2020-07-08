@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Link Bootstrap 4-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+    <title>Book Catalogue</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css') }}">
+
+</head>
+<body class="text-center">
+    <div id="bg-image">
+        <div>
+            {% include "_navbar.html" %}
+        </div>
+
+
+        <div class="container fluid" id="full-content">
+            
+            <!-- flashes -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class=flashes>
+                {% for category, message in messages %}
+                {% if category=="error" %}
+                <div class="alert alert-danger">{{ message }}</div>
+                {% elif category=="success" %}
+                <div class="alert alert-success"> {{ message }} </div>
+                {% else %}
+                <div class="alert alert-primary"> {{ message }} </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+            
+            <div id="main-text">
+                <!-- heading -->
+                <div class="h3" id="heading">{% block heading %}{% endblock %}</div>
+            
+                <!-- main body  -->
+                {% block body %}
+                {% endblock %}
+            </div>
+        </div>
+    
+    </div>
+
+</body>
+</html>

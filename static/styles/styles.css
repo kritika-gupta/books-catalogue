@@ -1,0 +1,95 @@
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  width: 100%;
+}
+
+#bg-image {
+  min-height: 100vh;
+  background-image: url("../images/home_bg.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#navigation {
+  border: solid 2px black;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+#navigation a {
+  color: black;
+}
+
+.flashes {
+  position: absolute;
+  width: 100%;
+}
+
+.blockquote {
+  font-size: 20px;
+}
+
+.card #api {
+  margin-top: 8rem;
+}
+
+#full-content {
+  position: relative;
+  text-align: center;
+  padding: 10px;
+}
+
+#main-text {
+  padding-top: 10px;
+}
+#main-text #heading {
+  margin-top: 60px;
+}
+#main-text #heading, #main-text .form-title {
+  position: relative;
+  padding: 10px;
+  color: darkslateblue;
+}
+#main-text .form-box {
+  margin-top: 30px;
+  padding: 20px;
+  position: relative;
+}
+#main-text .form-box .form-group {
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}
+
+#notloggedin {
+  padding-top: 20px;
+}
+
+#book-details {
+  width: 100%;
+  background-color: rgba(242, 239, 219, 0.8);
+}
+#book-details #book-info-table .info-label {
+  font-weight: bold;
+}
+#book-details #rate-form #rate-star, #book-details #rate-form #rate-text {
+  text-align: left;
+}
+#book-details #rate-book, #book-details #book-info {
+  border: solid 2px black;
+}
+
+#review-card {
+  text-align: left;
+}
+
+#booklist {
+  border: solid 2px black;
+  background-color: #f2efdb;
+}
+
+/*# sourceMappingURL=styles.css.map */
