@@ -84,7 +84,7 @@ def register():
     # create account after user fills form and clicks register button
     if request.method == "POST":
         username = request.form.get("username")
-        password = sha256_crypt.encrypt(request.form.get("password"))
+        password = sha256_crypt.hash(request.form.get("password"))
         email = request.form.get("email")
         # TODO: validate form entries
         
@@ -205,3 +205,9 @@ def api(isbn):
     review_count= count_stars,
     average_score= float(avg_stars)
     )
+
+def main():
+    app.run()
+
+if __name__ == "__main__":
+    main()
