@@ -21,7 +21,7 @@ Session(app)
 
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
-db = scoped_session(sessionmaker(bind=engine))
+db_session = scoped_session(sessionmaker(bind=engine))
 
 goodreads_key = "RDV7j0TosEXJvMwN4XNVzw"
 
@@ -57,9 +57,13 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        db()
-        user = db.execute("SELECT * FROM users WHERE username = :username", {"username":username}).fetchone()
-        db.remove()
+        db = db_session()
+        try:
+            user = db.execute("SELECT * FROM users WHERE username = :username", {"username":username}).fetchone()
+        except exc.SQLAlchemyError as e:
+            print("Error", e)
+        finally:
+            db.close()
         if user is None:
             flash("Username does not exist.", category="error")
             return redirect(url_for('login'))
@@ -89,17 +93,17 @@ def register():
         password = sha256_crypt.hash(request.form.get("password"))
         email = request.form.get("email")
         # TODO: validate form entries
-        
+        db = db_session()
         try:
-            db()
             db.execute("INSERT INTO users (username, password) VALUES (:username, :password)", {"username":username, "password":password})
+            db.commit()
 
         except exc.IntegrityError:
             #TODO: add specific error handling
             flash("Username already exists.", category='error')
             return redirect(url_for('register'))
-        db.commit()
-        db.remove()
+        finally:
+            db.close()
         flash("Account created, you can login now.", category="success")
         return redirect(url_for('login'))
 
@@ -107,9 +111,13 @@ def register():
 def account():
 
     if "username" in session:
-        db()
-        reviews = db.execute("SELECT b.title, r.book_isbn, r.stars, r.textreview, r.timestamp FROM users u join reviews r on u.id=r.user_id join books b on r.book_isbn=b.isbn WHERE u.username=:username", {"username":session["username"]}).fetchall()
-        db.remove()
+        db = db_session()
+        try:
+            reviews = db.execute("SELECT b.title, r.book_isbn, r.stars, r.textreview, r.timestamp FROM users u join reviews r on u.id=r.user_id join books b on r.book_isbn=b.isbn WHERE u.username=:username", {"username":session["username"]}).fetchall()
+        except exc.SQLAlchemyError as e:
+            print("Error", e)
+        finally:
+            db.close()
         return render_template("account.html", username=session["username"], reviews=reviews)
     else:
         flash("Logging in is required for this feature", category="error")
@@ -120,9 +128,14 @@ def booklist():
     
     if "username" in session:
         # get list of books
-        db()
-        books = db.execute("SELECT * FROM books").fetchall()
-        db.remove()
+        db = db_session()
+        try:
+            books = db.execute("SELECT * FROM books").fetchall()
+        except exc.SQLAlchemyError as e:
+            print("Error", e)
+        finally:
+            db.close()
+
         return render_template('booklist.html', username=session["username"], books=books)
     
     else:
@@ -138,9 +151,15 @@ def results():
     if isbn=="" and title=="" and author=="":
         flash("Please enter atleast one of the three options!", category="error")
         return redirect(url_for('search'))
-    db()
-    books = db.execute("SELECT * FROM books WHERE lower(isbn) LIKE lower(:isbn) AND lower(title) LIKE lower(:title) AND lower(author) LIKE lower(:author)", {"isbn":f"%{isbn}%", "title":f"%{title}%", "author":f"%{author}%"}).fetchall()
-    db.remove()
+    
+    db = db_session()
+    try:
+        books = db.execute("SELECT * FROM books WHERE lower(isbn) LIKE lower(:isbn) AND lower(title) LIKE lower(:title) AND lower(author) LIKE lower(:author)", {"isbn":f"%{isbn}%", "title":f"%{title}%", "author":f"%{author}%"}).fetchall()
+    except exc.SQLAlchemyError as e:
+        print("Error", e)
+    finally:
+        db.close()
+
     if not books:
         flash("No books matched your search!", category="error")
         return redirect(url_for('search'))
@@ -152,28 +171,43 @@ def book(isbn):
         stars = request.form.get("stars")
         review = request.form.get("review")
         # insert 
+
+        db = db_session()
         try:
-            db()
             user_id = db.execute("SELECT * FROM users WHERE username = :username", {"username":session["username"]}).fetchone().id
             db.execute("INSERT INTO reviews (book_isbn, stars, textreview, user_id, timestamp) VALUES (:isbn, :stars, :review, :user_id, now())", {"isbn":isbn, "stars":stars, "review":review, "user_id":user_id})
+            db.commit()
         except exc.SQLAlchemyError as e:
             print(f"SQLAlchemy error while inserting review:\n\n{e}")
-            return
+        finally:
+            db.close()
 
-        db.commit()
-        db.remove()
+
         print("Inserted review")
         return redirect("#")
 
     if request.method == "GET":
-        book = db.execute("SELECT * FROM books WHERE isbn=:isbn", {"isbn":isbn}).fetchone()
 
         # get users' textual reviews
-        db()
-        reviews = db.execute("SELECT r.textreview, r.stars, u.username FROM reviews as r join users as u on r.user_id=u.id WHERE r.book_isbn=:isbn AND r.textreview IS NOT NULL", {"isbn":isbn}).fetchall()
+        db = db_session()
+        try:
+            book = db.execute("SELECT * FROM books WHERE isbn=:isbn", {"isbn":isbn}).fetchone()
+            reviews = db.execute("SELECT r.textreview, r.stars, u.username FROM reviews as r join users as u on r.user_id=u.id WHERE r.book_isbn=:isbn AND r.textreview IS NOT NULL", {"isbn":isbn}).fetchall()
+        except exc.SQLAlchemyError as e:
+            print(f"SQLAlchemy error :\n\n{e}")
+        finally:
+            db.close()
         
         # get users' star rating
-        stars = db.execute("SELECT AVG(stars) as avg_stars, COUNT(stars) as count_stars FROM reviews WHERE book_isbn=:isbn", {"isbn":isbn}).fetchone()
+
+        db = db_session()
+        try:
+            stars = db.execute("SELECT AVG(stars) as avg_stars, COUNT(stars) as count_stars FROM reviews WHERE book_isbn=:isbn", {"isbn":isbn}).fetchone()
+        except exc.SQLAlchemyError as e:
+            print(f"SQLAlchemy error :\n\n{e}")
+        finally:
+            db.close()
+
         avg_stars = stars.avg_stars
         count_stars = stars.count_stars
         if avg_stars is not None:
@@ -187,21 +221,40 @@ def book(isbn):
         print(goodreads_rating) 
 
         # check if this user has already submitted a review
-        review_submitted = db.execute("SELECT count(*) as count FROM reviews as r join users as u on r.user_id=u.id WHERE r.book_isbn=:isbn AND u.username=:username", {"isbn":isbn, "username":session["username"]}).fetchone().count
-        db.remove()
+
+        db = db_session()
+        try:
+            review_submitted = db.execute("SELECT count(*) as count FROM reviews as r join users as u on r.user_id=u.id WHERE r.book_isbn=:isbn AND u.username=:username", {"isbn":isbn, "username":session["username"]}).fetchone().count
+        except exc.SQLAlchemyError as e:
+            print(f"SQLAlchemy error :\n\n{e}")
+        finally:
+            db.close()
+
         return render_template("book.html", username=session["username"], book=book, avg_stars=avg_stars, count_stars=count_stars, reviews=reviews, review_submitted=review_submitted, goodreads_rating=goodreads_rating)
 
 @app.route("/api/<string:isbn>")
 def api(isbn):
 
     # make sure book exists
-    db()
-    book = db.execute("SELECT * FROM books WHERE isbn=:isbn", {"isbn":isbn}).fetchone()
-    db.remove()
+    db = db_session()
+    try:
+        book = db.execute("SELECT * FROM books WHERE isbn=:isbn", {"isbn":isbn}).fetchone()
+    except exc.SQLAlchemyError as e:
+        print(f"SQLAlchemy error :\n\n{e}")
+    finally:
+        db.close()
+
     if book is None:
         return jsonify({"error":"Invalid isbn"}), 404
 
-    stars = db.execute("SELECT AVG(stars) as avg_stars, COUNT(stars) as count_stars FROM reviews WHERE book_isbn=:isbn", {"isbn":isbn}).fetchone()
+    db = db_session()
+    try:
+        stars = db.execute("SELECT AVG(stars) as avg_stars, COUNT(stars) as count_stars FROM reviews WHERE book_isbn=:isbn", {"isbn":isbn}).fetchone()
+    except exc.SQLAlchemyError as e:
+        print(f"SQLAlchemy error :\n\n{e}")
+    finally:
+        db.close()
+        
     avg_stars = stars.avg_stars
     count_stars = stars.count_stars
     if avg_stars is not None:
