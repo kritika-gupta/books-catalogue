@@ -43,8 +43,10 @@
                 <ul class="list-group list-group-flush">
                     {% for review in reviews %}
                     <li class="list-group-item">
-                        {{review.textreview}} 
-                        <br>
+                        {% if review.textreview %}
+                            {{review.textreview}} 
+                            <br>
+                        {% endif %}
                         <small>Stars : {{review.stars}}</small>
                         <br>
                         <small> by {{review.username}} </small>
