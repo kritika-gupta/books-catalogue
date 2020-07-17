@@ -2,12 +2,6 @@
 
 Web Programming with Python and JavaScript
 
-## Tables
-
-1. User - id, username, password, email id
-2. Books - isbn, title, author, year, review_id
-3. Reviews - id, book_isbn, stars, textreview, user_id, timestamp
-
 
 ## Features
 
