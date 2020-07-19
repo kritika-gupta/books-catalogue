@@ -35,10 +35,8 @@ body{
 }
 
 #api{
-    position: relative;
-    margin-top: 100px;
+    margin-top: 200px;
 }
-
 
 #full-content{
     position: relative;
@@ -77,7 +75,7 @@ body{
 }
 
 #book-details{
-    width: 100%;
+
     background-color:rgba(242, 239, 219, 0.8);
     #book-info-table{
         .info-label{
@@ -104,4 +102,27 @@ body{
 #booklist{
     border: solid 2px black;
     background-color: #f2efdb;
+    border-collapse: collapse;
+
+    @media (min-width: 800px) {
+        
+        .table td, th{
+            border: 1px solid rgb(72, 61, 139);
+        }
+    }
+
+    @media (max-width: 800px){
+        border-collapse: collapse;
+        .table tr{
+            display: table;
+            width: 100%;
+            border-bottom: 2px solid black;
+        }
+        .table td, th{
+            display: table-row;
+            border-bottom: 1px solid rgb(72, 61, 139,0.3);
+            
+        }
+    }
+
 }

@@ -6,6 +6,7 @@
 
 {%block body %}
 
+    <div class="container">
         {% if books %}
             <div id="booklist">
 
@@ -20,11 +21,11 @@
                     </tr>
                     {% for book in books %}
                     <tr>
-                        <td>{{loop.index}}</td>
-                        <td><a href="{{ url_for('book', isbn=book.isbn) }}">{{ book.isbn }}</a></td>
-                        <td>{{ book.title }}</td>
-                        <td>{{ book.author }}</td>
-                        <td>{{ book.year }}</td>
+                        <td data-title="Index">{{loop.index}}</td>
+                        <td data-title="ISBN"><a href="{{ url_for('book', isbn=book.isbn) }}">{{ book.isbn }}</a></td>
+                        <td data-title="Title">{{ book.title }}</td>
+                        <td data-title="Author">{{ book.author }}</td>
+                        <td data-title="Year">{{ book.year }}</td>
                         
                     </tr>
                     {% endfor %}
@@ -34,5 +35,6 @@
             <p>There are no books in the catalogue.</p>
         {% endif %}
         
+    </div>
 
 {% endblock %}

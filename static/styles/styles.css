@@ -33,8 +33,7 @@ body {
 }
 
 #api {
-  position: relative;
-  margin-top: 100px;
+  margin-top: 200px;
 }
 
 #full-content {
@@ -71,7 +70,6 @@ body {
 }
 
 #book-details {
-  width: 100%;
   background-color: rgba(242, 239, 219, 0.8);
 }
 #book-details #book-info-table .info-label {
@@ -91,6 +89,26 @@ body {
 #booklist {
   border: solid 2px black;
   background-color: #f2efdb;
+  border-collapse: collapse;
+}
+@media (min-width: 800px) {
+  #booklist .table td, #booklist th {
+    border: 1px solid darkslateblue;
+  }
+}
+@media (max-width: 800px) {
+  #booklist {
+    border-collapse: collapse;
+  }
+  #booklist .table tr {
+    display: table;
+    width: 100%;
+    border-bottom: 2px solid black;
+  }
+  #booklist .table td, #booklist th {
+    display: table-row;
+    border-bottom: 1px solid rgba(72, 61, 139, 0.3);
+  }
 }
 
 /*# sourceMappingURL=styles.css.map */

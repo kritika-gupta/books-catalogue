@@ -6,99 +6,102 @@
 
 {%block body %}
 
-<div class="row" id="book-details">
-    <div class="col-lg-7 pt-2 pb-4 px-4" id="book-info">
-        <table class="table" id="book-info-table">
-            <tr>
-                <td class="info-label">ISBN</td>
-                <td>{{book.isbn}}</td>
-            </tr>
-            <tr>
-                <td class="info-label">Title</td>
-                <td>{{book.title}}</td>
-            </tr>
-            <tr>
-                <td class="info-label">Author</td>
-                <td>{{book.author}}</td>
-            </tr>
-            <tr>
-                <td class="info-label">Year</td>
-                <td>{{book.year}}</td>
-            </tr>
-            <tr>
-                <td class="info-label">Rating</td>
-                <td>{{avg_stars}} <small> ({{count_stars}} users) </small></td>
-            </tr>
-            <tr>
-                <td class="info-label">Goodreads Rating</td>
-                <td>{{goodreads_rating[0]}} <small> ({{goodreads_rating[1]}} users) </small></td>
-            </tr>
-        </table>
+<div class="container">
 
-        {% if reviews %}
+    <div class="row" id="book-details">
+        <div class="col-lg-7 col-sm-12 pt-2 pb-4 px-4" id="book-info">
+            <table class="table" id="book-info-table">
+                <tr>
+                    <td class="info-label">ISBN</td>
+                    <td>{{book.isbn}}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">Title</td>
+                    <td>{{book.title}}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">Author</td>
+                    <td>{{book.author}}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">Year</td>
+                    <td>{{book.year}}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">Rating</td>
+                    <td>{{avg_stars}} <small> ({{count_stars}} users) </small></td>
+                </tr>
+                <tr>
+                    <td class="info-label">Goodreads Rating</td>
+                    <td>{{goodreads_rating[0]}} <small> ({{goodreads_rating[1]}} users) </small></td>
+                </tr>
+            </table>
+            
+            {% if reviews %}
             <div class="card" id="review-card">
                 <div class="card-header">
                     User Reviews
                 </div>
                 <ul class="list-group list-group-flush">
                     {% for review in reviews %}
-                    <li class="list-group-item">
-                        {% if review.textreview %}
+                        <li class="list-group-item">
+                            {% if review.textreview %}
                             {{review.textreview}} 
                             <br>
-                        {% endif %}
-                        <small>Stars : {{review.stars}}</small>
-                        <br>
-                        <small> by {{review.username}} </small>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% else %}
-            This book does not have any reviews yet. You can add one on the right.
-        {% endif %}
-    </div>     
-    
-    <div class="col-lg-5 p-4" id="rate-book">
-        <p style="font-weight: bolder; color: red;">
-
-            {% if review_submitted==1%}
-                You have already rated this book!
-            {% else %}
-                You can submit a review only once.
-            {% endif %}
-        </p>
+                            {% endif %}
+                            <small>Stars : {{review.stars}}</small>
+                            <br>
+                            <small> by {{review.username}} </small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% else %}
+                This book does not have any reviews yet. You can add one on the right.
+                {% endif %}
+            </div>     
             
-        <form action="#" method="POST" id="rate-form">
-            {% if review_submitted==1%}
+            <div class="col-lg-5 col-sm-12 p-4" id="rate-book">
+                <p style="font-weight: bolder; color: red;">
+                    
+                    {% if review_submitted==1%}
+                    You have already rated this book!
+                    {% else %}
+                    You can submit a review only once.
+                    {% endif %}
+                </p>
+                
+                <form action="#" method="POST" id="rate-form">
+                {% if review_submitted==1%}
                 <fieldset disabled>
-            {% else %}
-                <fieldset enabled>
-            {% endif %}
-
-                <div class="p-2" id="rate-star">
-                    <div class="form-group">
-                        <label for="review">Rate the book:</label>
-                        <input type="text" name="stars" id="stars" class="form-control" placeholder="On a scale of 1-5" required>
-                            
-        
+                    {% else %}
+                    <fieldset enabled>
+                        {% endif %}
+                        
+                        <div class="p-2" id="rate-star">
+                            <div class="form-group">
+                                <label for="review">Rate the book:</label>
+                                <input type="text" name="stars" id="stars" class="form-control" placeholder="On a scale of 1-5" required>
+                                
+                                
+                            </div>
                     </div>
-                </div>
-                
-                <div class="p-2" id="rate-text">
-                    <div class="form-group form-group-lg">
-                        <label for="review">Add your review:</label>
-                        <textarea name="review" id="review" rows="10" class="form-control" placeholder="Optional"></textarea>
+                    
+                    <div class="p-2" id="rate-text">
+                        <div class="form-group form-group-lg">
+                            <label for="review">Add your review:</label>
+                            <textarea name="review" id="review" rows="10" class="form-control" placeholder="Optional"></textarea>
+                        </div>
                     </div>
-                </div>
-                
-                <button class="btn btn-primary" type="submit" >Submit</button>
-                
-                
-            </fieldset>
-        </form>
+                    
+                    <button class="btn btn-primary" type="submit" >Submit</button>
+                    
+                    
+                </fieldset>
+            </form>
+        </div>
     </div>
+    
 </div>
-
-
-{% endblock %}
+    
+    {% endblock %}
