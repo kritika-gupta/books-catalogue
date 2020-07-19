@@ -32,8 +32,9 @@ body {
   font-size: 20px;
 }
 
-.card #api {
-  margin-top: 8rem;
+#api {
+  position: relative;
+  margin-top: 100px;
 }
 
 #full-content {
@@ -59,7 +60,7 @@ body {
   position: relative;
 }
 #main-text .form-box .form-group {
-  width: 600px;
+  width: 80%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;

@@ -2,6 +2,11 @@
 
 {% block heading %}
     Welcome!
+    <br>
+    {% if not username %}
+        <h5>Please <a href="{{ url_for('register') }}"> register</a> or <a href="{{ url_for('login') }}"> login.</a></h5>
+        
+    {% endif %}
 {% endblock %}
 
 {%block body %}
@@ -10,6 +15,7 @@
         <p>The person, be it gentleman or lady, who has not pleasure in a good novel, must be intolerably stupid.</p>
         <footer class="blockquote-footer">Jane Austen <cite>Northanger Abbey</cite></footer>
     </blockquote>
+
 
     <div class="card" id="api">
         <div class="card-header">
